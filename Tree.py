@@ -39,6 +39,7 @@ def turtle_follows_instruction(t, instructions, d, a, colors):
         headings.append(t.heading())
         turtle_colors.append(t.color())
     return positions, headings, turtle_colors 
+    
 
 def turtle_follows_instruction2(t, instructions, d, a, colors):
     save = []  
@@ -65,8 +66,29 @@ def turtle_follows_instruction2(t, instructions, d, a, colors):
                 t.setheading(heading)
                 t.color(color)
                 t.pendown()
-
         i += 1
+
+def assert_turtle_states(t, locs, heads, cols, exp_locs, exp_heads):
+    assert exp_locs[-1] == pytest.approx(t.position())
+    assert exp_heads[-1] == pytest.approx(t.heading())
+    assert len(heads) == len(exp_heads) and len(locs) == len(exp_locs)
+    for i in range(len(exp_locs)):
+        assert exp_heads[i] == pytest.approx(heads[i]) 
+        assert exp_locs[i] == pytest.approx(locs[i])
+
+def init_turtle():
+    turtle.reset()
+    turtle.clearscreen()
+    turtle.setup(width=800, height=800)
+    turtle.tracer(0)
+    t = turtle.Turtle()
+    t.left(90)
+    return t
+
+def cleanup_turtle():
+    turtle.bye()
+    turtle.Turtle._screen = None  
+    turtle.TurtleScreen._RUNNING = True  
 
 def test_q7_turtle_follows_instruction():
     t = init_turtle()
@@ -90,7 +112,6 @@ def test_q7_turtle_follows_instruction():
     cleanup_turtle()    
 
 
-# @pytest.mark.skip()
 def test_q8_turtle_follows_instruction2():
     t = init_turtle()
     turtle_follows_instruction2(t, 'F[F]', 100, 90, [])
@@ -104,7 +125,6 @@ def test_q8_turtle_follows_instruction2():
     turtle_follows_instruction2(t, '[+[+[+]]]', 100, 10, [])
     
 
-# @pytest.mark.skip()
 def test_q9_turtle_following_rules():
     colors = [(140/255, 80/255, 60/255), (24/255, 180/255, 24/255), (48/255, 220/255, 48/255), (64/255, 255/255, 64/255)]
     start = 'F'
@@ -117,7 +137,7 @@ def test_q9_turtle_following_rules():
     t.pendown()
     turtle_follows_instruction2(t, instructions, 4, 25, colors)
     turtle.getscreen().getcanvas().postscript(colormode='color', file='beautiful_rules1.ps')
-    turtle.mainloop()
+    #turtle.mainloop()
     t.reset()
     t.penup()
     t.setpos(0, -200)
@@ -132,26 +152,4 @@ def test_q9_turtle_following_rules():
     turtle.getscreen().getcanvas().postscript(colormode='color', file='beautiful_rules2.ps')
     turtle.mainloop()
 
-
-## Helper Functions. Do not touch/look
-def assert_turtle_states(t, locs, heads, cols, exp_locs, exp_heads):
-    assert exp_locs[-1] == pytest.approx(t.position())
-    assert exp_heads[-1] == pytest.approx(t.heading())
-    assert len(heads) == len(exp_heads) and len(locs) == len(exp_locs)
-    for i in range(len(exp_locs)):
-        assert exp_heads[i] == pytest.approx(heads[i]) 
-        assert exp_locs[i] == pytest.approx(locs[i])
-
-def init_turtle():
-    turtle.reset()
-    turtle.clearscreen()
-    turtle.setup(width=800, height=800)
-    turtle.tracer(0)
-    t = turtle.Turtle()
-    t.left(90)
-    return t
-
-def cleanup_turtle():
-    turtle.bye()
-    turtle.Turtle._screen = None  
-    turtle.TurtleScreen._RUNNING = True  
+test_q9_turtle_following_rules()
